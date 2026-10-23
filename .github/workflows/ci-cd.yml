@@ -52,7 +52,7 @@ jobs:
       - name: Comprobar contenedor por HTTP
         run: |
           docker run -d --name redes-smoke -p 127.0.0.1:8080:80 "$IMAGE:$GITHUB_SHA"
-          curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:8080/ -o /tmp/home.html
+          curl --fail --retry 20 --retry-all-errors --retry-delay 1 http://127.0.0.1:8080/ -o /tmp/home.html
           grep -q 'Práctica de CI/CD' /tmp/home.html
           curl --fail http://127.0.0.1:8080/version.json
           docker stop redes-smoke
