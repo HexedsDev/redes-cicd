@@ -1,0 +1,88 @@
+name: CI-CD | Redes Cloud Lab
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: redes-cloud-main
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: 1. Pruebas y artefacto
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v6
+      - name: Ejecutar 7 pruebas automaticas
+        run: python -m unittest discover -s tests -v
+      - name: Generar metadatos de la version
+        run: python scripts/build_metadata.py
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar artefacto web
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  container:
+    name: 2. Docker y registro GHCR
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/hexedsdev/redes-cicd-cloud-lab
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v6
+      - name: Generar metadatos de la version
+        run: python scripts/build_metadata.py
+      - name: Construir imagen Docker
+        run: docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" .
+      - name: Comprobar contenedor por HTTP
+        run: |
+          docker run -d --name redes-smoke -p 127.0.0.1:8080:80 "$IMAGE:$GITHUB_SHA"
+          curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:8080/ -o /tmp/home.html
+          grep -q 'Del commit' /tmp/home.html
+          curl --fail http://127.0.0.1:8080/version.json
+          docker stop redes-smoke
+      - name: Iniciar sesion en GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Publicar imagen versionada
+        run: |
+          docker push "$IMAGE:$GITHUB_SHA"
+          docker push "$IMAGE:latest"
+
+  deploy:
+    name: 3. Despliegue en la nube
+    needs: [verify, container]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Desplegar sitio en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Validar sitio publicado
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          curl --fail --retry 12 --retry-all-errors --retry-delay 5 "$SITE_URL" -o /tmp/published.html
+          grep -q 'Del commit' /tmp/published.html
+          curl --fail "${SITE_URL}version.json"
