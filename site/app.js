@@ -4,7 +4,7 @@ fetch('version.json', { cache: 'no-store' })
     return response.json();
   })
   .then(build => {
-    document.getElementById('version').textContent = `Versión ${build.version}`;
+    document.getElementById('version').textContent = build.version;
     document.getElementById('commit').textContent = build.commit.slice(0, 12);
     document.getElementById('built-at').textContent = build.built_at.replace('T', ' ').replace('+00:00', ' UTC');
   })

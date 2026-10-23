@@ -3,36 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Laboratorio de integración y despliegue continuo de Redes.">
-  <title>Redes | Laboratorio CI/CD</title>
+  <title>Práctica de Redes</title>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
 <body>
-  <header class="shell topbar">
-    <a class="brand" href="./"><span class="mark">R</span> REDES <span class="muted">/ CLOUD LAB</span></a>
-    <a class="repo" href="https://github.com/HexedsDev/redes-cicd-cloud-lab">Ver repositorio <span>↗</span></a>
+  <header>
+    <div class="container nav">
+      <strong>Redes</strong>
+      <nav>
+        <a href="https://github.com/HexedsDev/redes-cicd">Repositorio</a>
+        <a href="https://github.com/HexedsDev/redes-cicd/actions">Ejecuciones</a>
+      </nav>
+    </div>
   </header>
-  <main class="shell">
-    <section class="hero">
-      <div class="eyebrow"><span class="dot"></span> LABORATORIO DE INTEGRACIÓN Y DESPLIEGUE CONTINUO</div>
-      <h1>Del commit<br>a la <em>nube.</em></h1>
-      <p class="intro">Una aplicación, un repositorio y un flujo automático.<br>El código se verifica, se empaqueta y se publica con cada cambio.</p>
-      <div class="actions">
-        <a class="button" href="https://github.com/HexedsDev/redes-cicd-cloud-lab/actions">Explorar las ejecuciones <span>→</span></a>
-        <span class="version" id="version">Versión 1.0.0</span>
-      </div>
+  <main class="container">
+    <p class="course">SEXTO SEMESTRE</p>
+    <h1>Práctica de CI/CD</h1>
+    <p class="description">Aplicación web publicada automáticamente desde GitHub.</p>
+    <section class="details" aria-label="Versión publicada">
+      <h2>Versión del sitio</h2>
+      <dl>
+        <div><dt>Versión</dt><dd id="version">1.0.1</dd></div>
+        <div><dt>Commit</dt><dd id="commit">Pendiente</dd></div>
+        <div><dt>Fecha de publicación</dt><dd id="built-at">Pendiente</dd></div>
+        <div><dt>Rama</dt><dd>main</dd></div>
+      </dl>
     </section>
-    <section class="pipeline" aria-label="Etapas del flujo">
-      <article><span class="number">01 / CI</span><h2>Verificar</h2><p>Pruebas de estructura HTML, recursos y contenido antes de publicar.</p><span class="tag">Python · unittest</span></article>
-      <article><span class="number">02 / BUILD</span><h2>Empaquetar</h2><p>Imagen Docker con Nginx, validación HTTP y publicación en el registro.</p><span class="tag">Docker · GHCR</span></article>
-      <article><span class="number">03 / CD</span><h2>Desplegar</h2><p>Publicación automática en GitHub Pages cuando las etapas anteriores terminan.</p><span class="tag">GitHub Actions · Pages</span></article>
+    <section class="steps" aria-label="Proceso de publicación">
+      <article><span>1</span><h2>Pruebas</h2><p>Validación de los archivos del sitio.</p></article>
+      <article><span>2</span><h2>Docker</h2><p>Construcción y publicación de la imagen.</p></article>
+      <article><span>3</span><h2>Desplegar</h2><p>Actualización del sitio en GitHub Pages.</p></article>
     </section>
-    <section class="release" aria-label="Información de la publicación">
-      <div><span class="eyebrow">TRAZABILIDAD DE LA VERSIÓN</span><h2>El cambio tiene una huella.</h2></div>
-      <dl><div><dt>Commit</dt><dd id="commit">Disponible tras el despliegue</dd></div><div><dt>Construcción UTC</dt><dd id="built-at">Disponible tras el despliegue</dd></div><div><dt>Origen</dt><dd>main / GitHub Actions</dd></div></dl>
-    </section>
+    <p class="note">Al subir cambios a main, GitHub Actions ejecuta el proceso.</p>
   </main>
-  <footer class="shell">REDES · SEXTO SEMESTRE <span>Práctica CI/CD · 23 de octubre de 2026</span></footer>
 </body>
 </html>

@@ -45,7 +45,7 @@ class SiteTests(unittest.TestCase):
 
     def test_workflow_links_point_to_new_repository(self):
         links = [a.get('href', '') for t, a in self.doc.nodes if t == 'a']
-        self.assertIn('https://github.com/HexedsDev/redes-cicd-cloud-lab/actions', links)
+        self.assertIn('https://github.com/HexedsDev/redes-cicd/actions', links)
         self.assertNotIn('redes2web', self.html)
 
     def test_three_pipeline_stages(self):
